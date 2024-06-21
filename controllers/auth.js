@@ -5,15 +5,15 @@ require("dotenv").config();
 
 exports.signup = async (req,res) => {
     try {
-        const {username , firstName , lastName , password} = req.body;
+        const {email , firstName , lastName , password} = req.body;
 
-        if (!username || !firstName || !lastName || !password) {
+        if (!email || !firstName || !lastName || !password) {
             return res.json({
                 msg:"all fields required"
             })
         }
 
-        const excitingUser = await user.findOne({username});
+        const excitingUser = await user.findOne({email});
         if (excitingUser) {
             return res.status(500).json({
                 success:false,
@@ -21,8 +21,10 @@ exports.signup = async (req,res) => {
             })
         }
 
+                
+
         const newUser = await user.create({
-            username:username,
+            email:email,
             firstName:firstName,
             lastName:lastName,
             password:password
@@ -44,4 +46,49 @@ exports.signup = async (req,res) => {
             msg:"error aya"
         })
     }
+}
+
+
+exports.login = async (req , res ) =>{
+   try {
+      const {email , password} = req.body
+
+      if (!email || !password) {
+       return res.status(404).json({
+        message:"fill all details"
+       }) 
+      }
+
+      let User = await user.findOne({email})
+
+      if (!User) {
+        return res.status(404).json({
+            success:false,
+            message:"please signup firstly"
+        })
+      }
+
+      if(await bcrypt.compare(password , User.password)){
+        
+        User.password = undefined;
+
+        res.cookie("User" , token).json({
+            message:"User logged in Successfully",
+            success:true
+        })
+      } else {
+        console.log('Error In Comparing Password');
+        return res.status(500).json({
+          success: false,
+           message:'pasasword does not match'
+   });
+      }
+   } 
+   catch (error) {
+    console.log(error);
+         return res.status(500).json({
+             success:false,
+             message:"kuch gadbad hai"
+         });
+   } 
 }
