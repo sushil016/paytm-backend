@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const { JWT_SECRET} = require("../config");
 const account = require("../models/balance");
 require("dotenv").config();
+const bcrypt = require("bcrypt")
 
 
 exports.signup = async (req,res) => {
@@ -59,29 +60,37 @@ exports.signup = async (req,res) => {
 exports.login = async (req , res ) =>{
    try {
       const {email , password} = req.body
-
+     console.log(req.body.email,"hii email");
       if (!email || !password) {
        return res.status(404).json({
         message:"fill all details"
        }) 
       }
 
-      let User = await user.findOne({email})
+      let newUser = await user.findOne({email})
 
-      if (!User) {
+      if (!newUser) {
         return res.status(404).json({
             success:false,
             message:"please signup firstly"
         })
       }
 
-      if(await bcrypt.compare(password , User.password)){
-        
-        User.password = undefined;
+      let payload = {
+        email:newUser.email,
+        id:newUser._id
+      }
 
-        res.cookie("User" , token).json({
+      if(req.body.password == newUser.password){
+        
+        newUser = newUser.toObject();
+        newUser.token
+        newUser.password = undefined;
+
+        res.cookie("newUser").json({
             message:"User logged in Successfully",
-            success:true
+            success:true,
+            newUser,
         })
       } else {
         console.log('Error In Comparing Password');

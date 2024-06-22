@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 
 exports.authMiddleware = async (req , res , next ) =>{
     try {
-        const token = req.headers("Authorization").replace("bearer ", "")
+        const token = req.header("Authorization").replace("Bearer ","");
 
         console.log(token);
 
