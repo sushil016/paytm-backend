@@ -1,7 +1,9 @@
 const user = require("../models/user");
 const jwt = require("jsonwebtoken")
-const { JWT_SECRET} = require("../config")
+const { JWT_SECRET} = require("../config");
+const account = require("../models/balance");
 require("dotenv").config();
+
 
 exports.signup = async (req,res) => {
     try {
@@ -30,7 +32,12 @@ exports.signup = async (req,res) => {
             password:password
         })
 
-        const userId = newUser._id 
+        const userId = newUser._id;
+
+        await account.create({
+            userId,
+            balance : 1 + Math.random()* 10000
+        })
 
         const token = jwt.sign({userId}, JWT_SECRET);
         console.log(token)

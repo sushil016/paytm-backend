@@ -1,4 +1,6 @@
 const user = require("../models/user")
+const {JWT_SECRET} = require("../config");
+const jwt = require("jsonwebtoken")
 
 exports.authMiddleware = async (req , res , next ) =>{
     try {
