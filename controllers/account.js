@@ -1,4 +1,4 @@
-const user = require("../models/user");
+
 const account = require("../models/balance")
 const mongoose = require("mongoose")
 
@@ -42,6 +42,8 @@ exports.fundTransfer = async (req, res) => {
             success:true,
             message:"transsction sussessful"
         })
+
+        res.send("hello transfer")
     }
     
     catch (err){console.error(err)} 
@@ -59,4 +61,6 @@ exports.balanceRequest = async (req ,res) =>{
     res.json({
         balance:Account.balance,
     })
+
+    res.send("hello payment")
 }

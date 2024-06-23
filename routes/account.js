@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/balance', authMiddleware, balanceRequest)
 
 
-router.post('/transfer', authMiddleware, fundTransfer )
+router.post('/transfer', fundTransfer )
 
 
 module.exports = router;
