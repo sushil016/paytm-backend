@@ -7,9 +7,10 @@ const bcrypt = require("bcrypt");
 const zod = require("zod");
 
 const signupBody = zod.object({
-  username: zod.string().email(),
+  
   firstName: zod.string(),
   lastName: zod.string(),
+  username: zod.string().email(),
   password: zod.string(),
 });
 exports.signup = async (req, res) => {
